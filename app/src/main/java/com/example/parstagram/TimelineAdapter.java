@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.parse.ParseFile;
 import com.parse.ui.widget.ParseImageView;
 
 import java.util.List;
@@ -47,6 +48,16 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
         notifyDataSetChanged();
     }
 
+    public void clear() {
+        posts.clear();
+        notifyDataSetChanged();
+    }
+
+    public void addAll(List<Post> list) {
+        posts.addAll(list);
+        notifyDataSetChanged();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         ParseImageView ivContent;
@@ -61,10 +72,14 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
         }
 
         public void bind(Post post) {
-            tvUsername.setText(post.getUser().getUsername());
+            tvUsername.setText("@" + post.getUser().getUsername());
             tvDescription.setText(post.getDescription());
             ivContent.setParseFile(post.getImage());
-            ivContent.loadInBackground();
+            ParseFile image = post.getImage();
+            if (image != null){
+                ivContent.setParseFile(image);
+                ivContent.loadInBackground();
+            }
         }
     }
 }
